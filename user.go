@@ -5,15 +5,31 @@ import (
 	"encoding/csv"
 	"io"
 	"os"
+	"strings"
 )
 
-func loadUserDataFromFile(filename string) map[string]string {
+type accessType string
+
+const (
+	readonly  accessType = "RO"
+	writeonly accessType = "WO"
+	readwrite accessType = "RW"
+)
+
+type userData struct {
+	name     string
+	password string
+	access   accessType
+}
+
+func loadUserDataFromFile(filename string) map[string]userData {
 	fp, _ := os.Open(filename)
 	return loadCSV(bufio.NewReader(fp))
 }
 
-func loadCSV(reader io.Reader) map[string]string {
-	var data = map[string]string{}
+func loadCSV(reader io.Reader) map[string]userData {
+	var data = map[string]userData{}
+	var accT accessType
 
 	csvReader := csv.NewReader(reader)
 	csvReader.Comma = ','
@@ -23,7 +39,25 @@ func loadCSV(reader io.Reader) map[string]string {
 			break
 		}
 		if len(record) > 1 {
-			data[record[0]] = record[1]
+			if len(record) > 2 {
+				switch strings.ToUpper(record[2]) {
+				case "RO":
+					accT = readonly
+				case "WO":
+					accT = writeonly
+				case "RW":
+					accT = readwrite
+				default:
+					accT = readonly
+				}
+			} else {
+				accT = readonly
+			}
+			data[record[0]] = userData{
+				name:     record[0],
+				password: record[1],
+				access:   accT,
+			}
 		}
 	}
 	return data

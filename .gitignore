@@ -2,3 +2,5 @@
 *.zip
 ssl.cert
 ssl.key
+goCal
+ssl.crt

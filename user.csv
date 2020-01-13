@@ -1,3 +1,4 @@
-admin,123456
-foo,bar
-lorem,ipsum
+admin,123456,rw
+foo,bar,rw
+lorem,ipsum,ro
+,,ro
