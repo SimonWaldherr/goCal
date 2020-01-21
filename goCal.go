@@ -14,11 +14,8 @@ var (
 	SSLKey      string
 	UserFile    string
 	StoragePath string
-)
-
-const (
-	HTTPPort  = 8080
-	HTTPSPort = 443
+	HTTPPort    int
+	HTTPSPort   int
 )
 
 var userdata map[string]userData
@@ -28,6 +25,8 @@ func init() {
 	flag.StringVar(&SSLKey, "sslkey", "ssl.key", "path to the ssl/tls key file")
 	flag.StringVar(&UserFile, "user", "user.csv", "path to the user.csv file")
 	flag.StringVar(&StoragePath, "storage", "icsdata", "path to the folder with ics data")
+	flag.IntVar(&HTTPPort, "port", 80, "http port to listen")
+	flag.IntVar(&HTTPSPort, "sport", 443, "https port to listen")
 	flag.Parse()
 
 	userdata = loadUserDataFromFile(UserFile)
